@@ -11,7 +11,7 @@ spec:
       containers:
         - name: upgrade-sql-schema
           image: alpine:latest
-          command: ["sleep", "20"]
+          command: ["sleep", "5"]
       restartPolicy: Never
 ---
 apiVersion: apps/v1
@@ -47,7 +47,7 @@ spec:
       containers:
         - name: page-up
           image: alpine:latest
-          command: ["sleep", "20"]
+          command: ["sleep", "5"]
       restartPolicy: Never
   backoffLimit: 0
 ---
@@ -86,5 +86,5 @@ spec:
       containers:
         - name: page-down
           image: alpine:latest
-          command: ["exit", "20"]
+          command: ["exit", "5"]
       restartPolicy: Never
