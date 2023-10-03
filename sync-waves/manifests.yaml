@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: upgrade-sql-schema
+  generateName: raw-ts-data-onboarding
   annotations:
     argocd.argoproj.io/hook: PreSync
 spec:
@@ -17,7 +17,7 @@ spec:
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-  name: backend
+  name: ts-data-conversion
 spec:
   replicas: 1
   selector:
@@ -36,7 +36,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: maint-page-up
+  name: ts-data-deduplication
   annotations:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
@@ -54,7 +54,7 @@ spec:
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-  name: frontend
+  name: ts-data-enrichment
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
@@ -75,7 +75,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: maint-page-down
+  name: ts-data-enriched-persistent
   annotations:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
