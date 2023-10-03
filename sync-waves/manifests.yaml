@@ -86,5 +86,5 @@ spec:
       containers:
         - name: page-down
           image: alpine:latest
-          command: ["sleep", "20"]
+          command: ["exit", "20"]
       restartPolicy: Never
