@@ -11,11 +11,11 @@ spec:
       containers:
         - name: upgrade-sql-schema
           image: alpine:latest
-          command: ["sleep", "5"]
+          command: ["sleep", "20"]
       restartPolicy: Never
 ---
-apiVersion: apps/v1
-kind: ReplicaSet
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: backend
 spec:
@@ -29,20 +29,9 @@ spec:
         tier: backend
     spec:
       containers:
-        - name: main
-          image: nginx:latest
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend
-spec:
-  selector:
-    tier: backend
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+        - name: upgrade-sql-schema
+          image: alpine:latest
+          command: ["sleep", "1m"]
 ---
 apiVersion: batch/v1
 kind: Job
@@ -58,7 +47,7 @@ spec:
       containers:
         - name: page-up
           image: alpine:latest
-          command: ["sleep", "2"]
+          command: ["sleep", "20"]
       restartPolicy: Never
   backoffLimit: 0
 ---
@@ -79,22 +68,9 @@ spec:
         tier: frontend
     spec:
       containers:
-        - name: main
-          image: nginx:latest
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  selector:
-    tier: frontend
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+        - name: upgrade-sql-schema
+          image: alpine:latest
+          command: ["sleep", "1m"]
 ---
 apiVersion: batch/v1
 kind: Job
@@ -110,5 +86,5 @@ spec:
       containers:
         - name: page-down
           image: alpine:latest
-          command: ["sleep", "2"]
+          command: ["sleep", "20"]
       restartPolicy: Never
